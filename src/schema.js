@@ -17,9 +17,24 @@ const typeDefs = gql`
     streetAddress: String,
   }
 
+  type Review {
+      title: String!
+      average_rating: Float!
+    }
+
+  type User {
+    email: String!
+  }
+
   type Query {
     events: [Event]!
     event(id: String!): Event
+    reviews: [Review!]!
+    me: User
+  }
+
+  type Mutation {
+    addReview(title: String!, average_rating: Float!): Review!
   }
 
 `;

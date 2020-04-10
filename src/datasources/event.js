@@ -8,7 +8,7 @@ class EventAPI extends RESTDataSource {
 
   async getAllEvents() {
     const response = await this.get('events', { 
-      apiKey: 'bfbbc89a-70fe-4c46-aabc-e0985c9a7a57', 
+      apiKey: process.env.PUBLIQ_APP_KEY, 
       embed : 'true' 
     });
     let json = JSON.parse(response);
@@ -34,7 +34,7 @@ class EventAPI extends RESTDataSource {
   
   async getEventById({ eventId }) {
     const response = await this.get('events', { 
-      apiKey: 'bfbbc89a-70fe-4c46-aabc-e0985c9a7a57', 
+      apiKey: process.env.PUBLIQ_APP_KEY, 
       embed : 'true',
       id: eventId 
     });
