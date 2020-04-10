@@ -19,8 +19,8 @@ function getKey(header, cb){
 }
 
 const options = {
-  audience: 'http://localhost:4000/',
-  issuer: `https://publiq-sandbox.eu.auth0.com/`,
+  audience: process.env.AUTH0_AUDIENCE,
+  issuer: process.env.AUTH0_DOMAIN,
   algorithms: ['RS256']
 };
 
@@ -30,7 +30,7 @@ mongoose.Promise = global.Promise;
 const url = 'mongodb://127.0.0.1:27017/graphqldb';
 
 mongoose.connect(url, { useNewUrlParser: true });
-mongoose.connection.once('open', () => console.log(`Connected to mongo at ${url}`));
+mongoose.connection.once('open', () => console.log(`🍃 Connected to mongo at ${url}`));
 
 
 const typeDefs = require('./schema');
@@ -43,7 +43,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    // simple auth check on every request
+    // Simple auth check access token of auth0 on every request
     const token = req.headers.authorization;
     const user = new Promise((resolve, reject) => {
       jwt.verify(token, getKey, options, (err, decoded) => {
@@ -64,10 +64,6 @@ const server = new ApolloServer({
     eventAPI: new EventAPI()
   })
 });
-
-/*
-
-*/
 
 server.listen().then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);

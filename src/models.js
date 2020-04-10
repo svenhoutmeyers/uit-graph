@@ -1,3 +1,5 @@
+
+// check if we didn't have to use apollo-datasource-mongodb
 const mongoose = require('mongoose')
 
 const reviewSchema = new mongoose.Schema({
