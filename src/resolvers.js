@@ -9,8 +9,9 @@ module.exports = {
     reviews: async () => await Review.find({}).exec()
   },
   Mutation: {
-    addReview: async (_, args) => {
+    addReview: async (_, args, { user }) => {
         try {
+            const email = await user;
             let response = await Review.create(args);
             return response;
         } catch(e) {
@@ -19,19 +20,3 @@ module.exports = {
     }
   }
 };
-
-
-/*
-       try {
-        const email = await user; // catching the reject from the user promise.
-        const review = await Review.create({
-          title: title,
-          average_rating: average_rating,
-          eventId: eventId
-        });
-
-        return review;
-       } catch(e) {
-           throw new AuthenticationError('You must be logged in to do this');
-       }
-*/

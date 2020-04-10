@@ -2,13 +2,14 @@ const { ApolloServer, AuthenticationError } = require('apollo-server');
 
 require('dotenv').config();
 
-/*
+
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
   jwksUri: 'https://publiq-sandbox.eu.auth0.com/.well-known/jwks.json'
 });
+
 
 function getKey(header, cb){
   client.getSigningKey(header.kid, function(err, key) {
@@ -18,21 +19,18 @@ function getKey(header, cb){
 }
 
 const options = {
-  audience: 'WTrI3Qq3kh72Dk8G8zHsLBQHLjwmGOVb',
+  audience: 'http://localhost:4000/',
   issuer: `https://publiq-sandbox.eu.auth0.com/`,
   algorithms: ['RS256']
 };
-*/
 
 const mongoose = require('mongoose');
-
 mongoose.Promise = global.Promise;
 
 const url = 'mongodb://127.0.0.1:27017/graphqldb';
 
 mongoose.connect(url, { useNewUrlParser: true });
 mongoose.connection.once('open', () => console.log(`Connected to mongo at ${url}`));
-
 
 
 const typeDefs = require('./schema');
@@ -44,16 +42,7 @@ const EventAPI = require('./datasources/event');
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  engine: {
-    apiKey: process.env.ENGINE_API_KEY,
-  },
-  dataSources: () => ({
-    eventAPI: new EventAPI()
-  })
-});
-
-/*
-context: ({ req }) => {
+  context: ({ req }) => {
     // simple auth check on every request
     const token = req.headers.authorization;
     const user = new Promise((resolve, reject) => {
@@ -64,10 +53,20 @@ context: ({ req }) => {
         resolve(decoded.email);
       });
     });
-
     return {
       user
     };
+  },
+  engine: {
+    apiKey: process.env.ENGINE_API_KEY,
+  },
+  dataSources: () => ({
+    eventAPI: new EventAPI()
+  })
+});
+
+/*
+
 */
 
 server.listen().then(({ url }) => {
